@@ -1,8 +1,3 @@
-import xca
-data = b'cheese balls'
-workspace = xca.XpressHuffman()
+import xca #xca library created by GitHub user jborean93 accessible at https://github.com/jborean93/pyxca
 
-compressed_data = workspace.compress(data)
-print(compressed_data)
-decompressed_data = workspace.decompress(compressed_data, len(data))
-print(decompressed_data)
+print('working')
