@@ -39,16 +39,14 @@ def generate_prefetch(executable_name, run_count, last_run_time, accessed_files,
     file_name_as_bytes = bytes(file_name, 'utf-16le') 
     
     #constructing file header
-    #header = struct.pack('I4s4sI60s4sI',b'MAM\x00',version,b'SCCA',b'0x11',file_size, bytes(file_name, 'utf-16le'), bytes(file_path_hash,'utf-16le'),0)
+    #header = struct.pack('4sI4s4sI60s4sI',b'MAM\x00',version,b'SCCA',b'0x11',file_size, bytes(file_name, 'utf-16le'), bytes(file_path_hash,'utf-16le'),0)
     header = struct.pack('4sI',b'MAM\x00',file_size)
     #print(header)
-    #print(len(header))
+    print(len(header))
     exe_name = struct.pack('64s', executable_name.encode('utf-16le')) 
 
 # Run count and last run time 
-    print(run_count)
     run_info = struct.pack('I', run_count) + struct.pack('Q', int(last_run_time))
-    print(run_info)
 
   # Accessed files (simplified) 
 
@@ -68,8 +66,15 @@ def generate_prefetch(executable_name, run_count, last_run_time, accessed_files,
     #creating file information section for a windows 10 machine
     if version == 30:
         print('windows 10')
-    f = open(prefetch_path + file_name.upper() + '.pf', 'wb')
-    f.write(prefetch_data)
-    f.close()
+        file_metrics_array_offset = 304
+        file_metrics_array_entries = 1
+        trace_chains_array_offset = file_metrics_array_offset + (file_metrics_array_entries*32)
+        trace_chains_array_entries = 1
+        file_name_strings_offset = trace_chains_array_offset + (trace_chains_array_entries*8)
+        file_name_strings_size = 4
+        file_information = struct.pack('III',file_metrics_array_offset, file_metrics_array_entries, trace_chains_array_offset)
+    #f = open(prefetch_path + file_name.upper() + '.pf', 'wb')
+    #f.write(prefetch_data)
+    #f.close()
 
 generate_prefetch('test.exe', 5, 0, 'xyz', OS, 2000, 'C:/Users/Forensics-User/Documents')
