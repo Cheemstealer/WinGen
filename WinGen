@@ -38,13 +38,34 @@ being run at a specified date and time
         else:
             #if date is invalid it asks the user for it again
             print('Please input date and time in the format dd-mm-yyyy hh:mm:ss')
-            
+
+    #take input of the file path of the application to be run
+    valid_path = False
+    while valid_path != True:
+        try:
+            path = str(input('File path of executable (use /) :'))
+            test = open(path,'rb') #opening the path in read bites mode to check it exists
+        except:
+            #if path is invalid prompt the user to correct it
+            print('Ensure the path is formatted correctly and exists')
+        else:
+            #if it's valid then continue the program
+            valid_path = True
+
+    #Now we need to determine whether a prefetch file already exists for the executable
+    file_path_as_list = path.split('/') #split the file path into a list
+    exe_name = file_path_as_list[-1] #so that we can seperate the executable name from it
+
+    prefetch_path = 'C:/Windows/Prefetch'#where prefetch files are stored in all windows machines
+
+   #iterate through all files in the prefetch folder and check their name
+                         
 
 def main_menu():
    
     #ensuring that only valid inputs are possible
-    valid = False
-    while valid == False:
+    end = False
+    while end != True:
         #printing simple text based menu
         print('''
 ===================================================
@@ -52,14 +73,17 @@ def main_menu():
 ===================================================
 1)Prefetch generator
 3) Deleted Files
+5) Close
 ''')
    
         choice = str(input('Please choose an option: '))
         if choice == '1':
             prefetch_menu()
-            valid = True
+            
         elif choice == '3':
             deleted_files()
+        elif choice == '5':
+            end = True
         else:
             print('Please select a valid option')
             
