@@ -5,18 +5,21 @@ import subprocess
 import re
 
 ###Tasks
-#link up prefetch generation with it's menu
 #generation of lnk files?
 
 def validate_date_time(date_time):
     split_date_time = date_time.split(' ')
     #using regex to validate the date and time
-    if (re.search("[0-9]{2}-[0-9]{2}-[0-9]{4}", split_date_time[0])) and (re.search("([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]",split_date_time[1])):
-        #if the date is valid then the program continues
-        valid_date_time = True
-    else:
-        valid_date_time = False
-    return(valid_date_time)
+    try:
+        
+        if (re.search("[0-9]{2}-[0-9]{2}-[0-9]{4}", split_date_time[0])) and (re.search("([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]",split_date_time[1])):
+            #if the date is valid then the program continues
+            valid_date_time = True
+        else:
+            valid_date_time = False
+        return(valid_date_time)
+    except:
+        return (False)
         
     
 def prefetch_menu():
@@ -58,8 +61,23 @@ being run at a specified date and time
 
     prefetch_path = 'C:/Windows/Prefetch'#where prefetch files are stored in all windows machines
 
-   #iterate through all files in the prefetch folder and check their name
-                         
+    #Check if there is already a prefetch file for that exe, if there is delete it
+    for file in os.listdir(prefetch_path): #iterate through each file in the prefetch folder
+        if exe_name.upper() in file: #checks if that prefetch file relates to the specified exe
+            os.remove(prefetch_path+'/'+file)#delete the prefetch file
+
+    
+    current_datetime = datetime.datetime.now()#obtaing current date and time
+
+    current_date = current_datetime.strftime('%d-%m-%y')#formatting the date correctly 
+
+    current_time = time.strftime('%H:%M:%S',time.localtime())#formatting the time correctly
+
+    
+    generate_prefetch(date_time, path)#run the prefetch generator
+
+    os.system(f'date {current_date}')#resetting date
+    os.system(f'time {current_time}')#resetting time
 
 def main_menu():
    
@@ -88,8 +106,15 @@ def main_menu():
             print('Please select a valid option')
             
                      
-def generate_prefetch(last_run_time,current_date,current_time,path):
+def generate_prefetch(last_run_time,path):
     run_date, run_time = last_run_time.split()
+
+    #obtaining current time and date so it can be switched back
+    current_datetime = datetime.datetime.now()
+
+    current_date = current_datetime.strftime('%d-%m-%y')
+
+    current_time = time.strftime('%H:%M:%S',time.localtime())
     
     #setting desired date
     os.system(f'date {run_date}')
@@ -102,16 +127,7 @@ def generate_prefetch(last_run_time,current_date,current_time,path):
     time.sleep(0.1)
     proc.terminate()
    
-    #change time back after making the prefetch file
-    os.system(f'date {current_date}')
-    os.system(f'time {current_time}')
 
-    #obtaining current time and date so it can be switched back
-    current_datetime = datetime.datetime.now()
-
-    formatted_date = current_datetime.strftime('%d-%m-%y')
-
-    current_time = time.strftime('%H:%M:%S',time.localtime())
 
 def deleted_files():
     print('''
