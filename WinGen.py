@@ -3,10 +3,52 @@ import datetime
 import time
 import subprocess
 import re
-
+import winshell
 ###Tasks
 #generation of lnk files?
+def lnk_menu():
+    print('''
+===================================================
+                  LNK Generator
+===================================================
+  Generate an LNK file for a desired executable
 
+''')
+    valid_lnk_path = False
+    while valid_lnk_path != True:
+        try:
+            lnk_path = str(input('Location for LNK file to be created (use /): '))#taking input of where the user wants the LNK file to be saved
+            if os.path.exists(lnk_path) == True: #using the os library to check that the path entered by the user exits
+                valid_lnk_path = True
+        except:
+            print('Ensure the path is formatted correctly and exists')
+
+    valid_executable_path = False
+    while valid_executable_path != True:
+        try:
+            executable_path = str(input('Location of executable (using /): '))
+            if os.path.exists(executable_path)==True:
+                valid_executable_path = True
+        except:
+            print('Ensure the path enterred is formatted correctly and exists')
+
+    valid_date_time = False
+    while valid_date_time != True:
+        date_time = input('Date and time of LNK fle creation (dd-mm-yyyy hh:mm:ss): ')
+        if validate_date_time(date_time) == True:
+            valid_date_time=True
+        else:
+            print('Please ensure the date and time are formatted correctly (dd-mm-yyy hh:mm:ss)')
+    
+
+    lnk_generator(lnk_path, executable_path, date_time)
+
+def lnk_generator(lnk_path, executable_path, date_time):
+   
+    with winshell.shortcut(lnk_path+'/encase.exe')as shortcut:
+        shortcut.path = executable_path
+    print('shortcut generated at'+lnk_path)
+            
 def validate_date_time(date_time):
     split_date_time = date_time.split(' ')
     #using regex to validate the date and time
@@ -90,6 +132,7 @@ def main_menu():
                       WINGEN
 ===================================================
 1)Prefetch generator
+2)LNK generator
 3) Deleted Files
 5) Close
 ''')
@@ -97,7 +140,8 @@ def main_menu():
         choice = str(input('Please choose an option: '))
         if choice == '1':
             prefetch_menu()
-            
+        elif choice == '2':
+            lnk_menu()
         elif choice == '3':
             deleted_files()
         elif choice == '5':
@@ -141,7 +185,7 @@ attempting to hide evidence''')
     valid_date_time = False
     while valid_date_time == False:
     #taking input of the date and time
-        date_time = input('Date and time of execution (dd-mm-yyyy hh:mm:ss): ')
+        date_time = input('Date and time of creation (dd-mm-yyyy hh:mm:ss): ')
         if validate_date_time(date_time) == True:
             valid_date_time = True
         else:
