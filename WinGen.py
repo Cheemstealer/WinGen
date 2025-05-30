@@ -27,11 +27,14 @@ def lnk_menu():
     while valid_executable_path != True:
         try:
             executable_path = str(input('Location of executable (using /): '))
-            if os.path.exists(executable_path)==True:
+            if os.path.exists(executable_path)==True:#verifying the path exists
                 valid_executable_path = True
         except:
             print('Ensure the path enterred is formatted correctly and exists')
+    lnk_file_name = str(input('Name for the created LNK file: '))#taking the name of the application the LNK is for
 
+
+    #taking a date and time for the LNK to be created
     valid_date_time = False
     while valid_date_time != True:
         date_time = input('Date and time of LNK fle creation (dd-mm-yyyy hh:mm:ss): ')
@@ -41,12 +44,29 @@ def lnk_menu():
             print('Please ensure the date and time are formatted correctly (dd-mm-yyy hh:mm:ss)')
     
 
-    lnk_generator(lnk_path, executable_path, date_time)
+    lnk_generator(lnk_path, executable_path, date_time, lnk_file_name)
 
-def lnk_generator(lnk_path, executable_path, date_time):
-    with winshell.shortcut(os.path.join(lnk_path, 'encase.lnk'))as shortcut:
-        shortcut.path = executable_path
-    print('shortcut generated at'+lnk_path)
+def lnk_generator(lnk_path, executable_path, date_time, lnk_file_name):
+
+    #taking current date and time to be able to set it back later
+    current_datetime = datetime.datetime.now()#obtaing current date and time
+
+    current_date = current_datetime.strftime('%d-%m-%y')#formatting the date correctly 
+
+    current_time = time.strftime('%H:%M:%S',time.localtime())#formatting the time correctly
+
+    #setting system time to intended time of LNK creation
+    split = date_time.split(' ')
+    os.system(f'date {split[0]}')
+    os.system(f'time {split[1]}')
+
+    #creating the LNK file
+    with winshell.shortcut(os.path.join(lnk_path, lnk_file_name+'.lnk'))as shortcut: #creating a shortcut in the desired directory
+        shortcut.path = executable_path #path of the excutable that the LNK is made for
+
+    #resetting date and time
+    os.system(f'date {current_date}')
+    os.system(f'time {current_time}')
             
 def validate_date_time(date_time):
     split_date_time = date_time.split(' ')
@@ -151,13 +171,6 @@ def main_menu():
                      
 def generate_prefetch(last_run_time,path):
     run_date, run_time = last_run_time.split()
-
-    #obtaining current time and date so it can be switched back
-    current_datetime = datetime.datetime.now()
-
-    current_date = current_datetime.strftime('%d-%m-%y')
-
-    current_time = time.strftime('%H:%M:%S',time.localtime())
     
     #setting desired date
     os.system(f'date {run_date}')
