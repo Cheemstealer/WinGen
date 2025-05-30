@@ -44,8 +44,7 @@ def lnk_menu():
     lnk_generator(lnk_path, executable_path, date_time)
 
 def lnk_generator(lnk_path, executable_path, date_time):
-   
-    with winshell.shortcut(lnk_path+'/encase.exe')as shortcut:
+    with winshell.shortcut(os.path.join(lnk_path, 'encase.lnk'))as shortcut:
         shortcut.path = executable_path
     print('shortcut generated at'+lnk_path)
             
