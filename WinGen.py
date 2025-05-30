@@ -5,7 +5,122 @@ import subprocess
 import re
 import winshell
 ###Tasks
-#generation of lnk files?
+#help menu
+def help_menu():
+    help_needed = True
+    while help_needed != False:
+        print('''
+===================================================
+                    Help Menu
+===================================================
+General Help:
+
+WinGen must be run in the command line as
+administrator to function correctly.
+
+All file paths must be formatted with /.
+
+All dates and times must be formatted
+dd-mm-yyy hh:mm:ss
+
+What would you like help with?
+
+1)Prefetch Generator
+2)LNK Generator
+3)Deleted File Generator
+4)Back To Main Menu
+
+''')
+        option = str(input('Please choose an option: '))
+        if option == '1':
+            prefetch_help()
+        elif option == '2':
+            LNK_help()
+        elif option == '3':
+            deleted_file_help()
+        elif option == '4':
+            help_needed = False
+        else:
+            print('Please select a valid option')
+
+def prefetch_help():
+    print('''
+===================================================
+                  Prefetch Help
+===================================================
+To generate a prefetch file you first have to enter
+the date and time that you want to simulate the
+file being first run.
+
+This should be entered in the format:
+dd-mm-yyyy hh:mm:ss
+
+Next you have to enter the file path of the
+application that you want to simulate the running
+of.
+
+For this you will need the application
+pre-installed on the machine you are using.
+
+The file path should be entered using /.
+
+''')
+    input('Press enter to continue')
+
+
+def LNK_help():
+    print('''
+===================================================
+                     LNK Help
+===================================================
+To gnereate an LNK file, you first have to specify
+where you want the LNK file to be generated in the
+file system.
+
+As with the rest of WinGen, file paths should be
+entered with /.
+
+You then have to provide WinGen with the location
+of the execuatble you are wanting to create an
+LNK for, as with the prefetch generation, the
+application will need to be pre-installed on
+the machine you are using.
+
+You then provide a name for the created LNK file,
+this will usually be the same as the name of the
+application.
+
+Finally you enter the date and time that you want
+to simulate the LNK file being genereated at.
+
+''')
+    input('Press enter to continue')
+        
+def deleted_file_help():
+    print('''
+===================================================
+                 Deleted File Help
+===================================================
+To simulate a deleted file, first you need to
+provide the date and time that you want the file
+to have been created.
+
+Next you need to provide a name for this file.
+
+Then you provide the contents of the file, currently
+WinGen only supports the creation of text files.
+
+Now you provide the file path of where you want the
+file to be created ensuring the use of /.
+
+You can then decide if you want the file to have been
+modified at any time.
+
+If yes, you will be prompted to enter a new date and
+time for when the file is modified.
+
+''')
+    input('Press enter to continue')
 def lnk_menu():
     print('''
 ===================================================
@@ -152,8 +267,9 @@ def main_menu():
 ===================================================
 1)Prefetch generator
 2)LNK generator
-3) Deleted Files
-5) Close
+3)Deleted Files
+4)Help
+5)Close
 ''')
    
         choice = str(input('Please choose an option: '))
@@ -163,6 +279,8 @@ def main_menu():
             lnk_menu()
         elif choice == '3':
             deleted_files()
+        elif choice == '4':
+            help_menu()
         elif choice == '5':
             end = True
         else:
